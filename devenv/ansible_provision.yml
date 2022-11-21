@@ -95,29 +95,29 @@
     - name: clone EDK II repository
       git:
         repo: "https://github.com/tianocore/edk2.git"
-        dest: "{{ ansible_env.HOME }}/edk2"
+        dest: "{{ ansible_env.HOME }}/mikanOS/edk2"
         version: "38c8be123aced4cc8ad5c7e0da9121a181b94251"
 
     - name: build EDK II base tools
       make:
-        chdir: "{{ ansible_env.HOME }}/edk2/BaseTools/Source/C"
+        chdir: "{{ ansible_env.HOME }}/mikanOS/edk2/BaseTools/Source/C"
 
     - name: download standard libraries
       unarchive:
         src: "https://github.com/uchan-nos/mikanos-build/releases/download/v2.0/x86_64-elf.tar.gz"
-        dest: "{{ ansible_env.HOME }}/osbook/devenv"
+        dest: "{{ ansible_env.HOME }}/mikanOS/osbook/devenv"
         remote_src: yes
 
     - name: configure display variable if WSL1
       lineinfile:
-        path: "{{ ansible_env.HOME }}/.profile"
+        path: "{{ ansible_env.HOME }}/mikanOS/.profile"
         regexp: "^export DISPLAY="
         line: "export DISPLAY=:0"
       when: "'DISPLAY' not in ansible_env and 'WSLENV' in ansible_env and 'WSL_INTEROP' not in ansible_env"
 
     - name: configure display variable if WSL2
       lineinfile:
-        path: "{{ ansible_env.HOME }}/.profile"
+        path: "{{ ansible_env.HOME }}/mikanOS/.profile"
         regexp: "^export DISPLAY="
         line: "export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0"
       when: "'DISPLAY' not in ansible_env and 'WSL_INTEROP' in ansible_env"
